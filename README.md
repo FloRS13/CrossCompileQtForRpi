@@ -54,7 +54,15 @@ Remember versions of gcc(12.2.0), ld(2.40) and ldd(2.36). Source code of the sam
 
 Append following piece of code to the end of ~/.bashrc.
 ```
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/qt6/lib/
+export QT_PLUGIN_PATH=/usr/local/qt6/plugins
+export QML2_IMPORT_PATH=/usr/local/qt6/qml
+unset DISPLAY
+export QT_QPA_PLATFORM=eglfs
+export QT_QPA_EGLFS_INTEGRATION=eglfs_kms
+export QT_QPA_EGLFS_ALWAYS_SET_MODE=1
+export QT_QPA_EGLFS_FORCE888=1
+export QT_QPA_EGLFS_DEBUG=1
+export EGL_PLATFORM=drm
 ```
 Update the changes.
 ```
@@ -263,6 +271,9 @@ Make folders for sysroot and qt6.
 cd ~
 ```
 ```
+mkdir qt-rpi-cc && cd qt-rpi-cc
+```
+```
 mkdir rpi-sysroot rpi-sysroot/usr rpi-sysroot/opt
 ```
 ```
@@ -270,7 +281,7 @@ mkdir qt6 qt6/host qt6/pi qt6/host-build qt6/pi-build qt6/src
 ```
 Download QtBase source code
 ```
-cd ~/qt6/src
+cd ~/qt-rpi-cc/qt6/src
 ```
 ```
 wget https://download.qt.io/official_releases/qt/6.5/6.5.1/submodules/qtbase-everywhere-src-6.5.1.tar.xz
@@ -280,7 +291,7 @@ tar xf qtbase-everywhere-src-6.5.1.tar.xz
 ```
 ### Build Qt6 for host
 ```
-cd $HOME/qt6/host-build/
+cd $HOME/qt-rpi-cc/qt6/host-build/
 ```
 ```
 cmake ../src/qtbase-everywhere-src-6.5.1/ -GNinja -DCMAKE_BUILD_TYPE=Release -DQT_BUILD_EXAMPLES=OFF -DQT_BUILD_TESTS=OFF -DCMAKE_INSTALL_PREFIX=$HOME/qt6/host
@@ -291,7 +302,7 @@ cmake --build . --parallel 8
 ```
 cmake --install .
 ```
-Binaries will be in $HOME/qt6/host
+Binaries will be in $HOME/qt-rpi-cc/qt6/host
 ### Build Qt6 for rpi
 copy and paste a few folders from rpi using rsync through SSH. **You should modify the following commands to your needs.**
 For this example the name of the board is raspberrypi 
@@ -299,18 +310,18 @@ For this example the name of the board is raspberrypi
 cd ~
 ```
 ```
-rsync -avz --rsync-path="sudo rsync" pi@raspberrypi.local:/usr/include rpi-sysroot/usr
+rsync -avz --rsync-path="sudo rsync" pi@rpi4:/usr/include qt-rpi-cc/rpi-sysroot/usr
 ```
 ```
-rsync -avz --rsync-path="sudo rsync" pi@raspberrypi.local:/lib rpi-sysroot
+rsync -avz --rsync-path="sudo rsync" pi@rpi4:/lib qt-rpi-cc/rpi-sysroot
 ```
 ```
-rsync -avz --rsync-path="sudo rsync" pi@raspberrypi.local:/usr/lib rpi-sysroot/usr
+rsync -avz --rsync-path="sudo rsync" pi@rpi4:/usr/lib qt-rpi-cc/rpi-sysroot/usr
 ```
 ```
-rsync -avz --rsync-path="sudo rsync" pi@raspberrypi.local:/opt/vc rpi-sysroot/opt
+rsync -avz --rsync-path="sudo rsync" pi@rpi4:/opt/vc qt-rpi-cc/rpi-sysroot/opt
 ```
-Create a file named toolchain.cmake in $HOME/qt6.
+Create a file named toolchain.cmake in $HOME/qt-rpi-cc/qt6.
 ```
 cmake_minimum_required(VERSION 3.18)
 include_guard(GLOBAL)
@@ -438,14 +449,14 @@ python3 sysroot-relativelinks.py rpi-sysroot
 ```
 Compile source code for rpi.
 ```
-cd $HOME/qt6/pi-build
-cmake ../src/qtbase-everywhere-src-6.8.0/ -GNinja -DCMAKE_BUILD_TYPE=Release -DQT_BUILD_EXAMPLES=OFF -DQT_BUILD_TESTS=OFF -DQT_HOST_PATH=$HOME/workspace/qt-rpi-cross-compilation/qt6/host -DCMAKE_STAGING_PREFIX=$HOME/workspace/qt-rpi-cross-compilation/qt6/pi -DCMAKE_INSTALL_PREFIX=/usr/local/qt6 -DCMAKE_TOOLCHAIN_FILE=$HOME/workspace/qt-rpi-cross-compilation/qt6/toolchain.cmake -DQT_QMAKE_TARGET_MKSPEC=devices/linux-rasp-pi4-aarch64 -DQT_FEATURE_eglfs=ON -DQT_FEATURE_linuxfb=ON -DQT_FEATURE_xcb=OFF -DQT_FEATURE_opengl=ON -DQT_FEATURE_eglfs_kms=ON -DQT_FEATURE_vulkan=OFF -DQT_FEATURE_eglfs_gbm=ON -DQT_FEATURE_drm=ON -DQT_FEATURE_gbm=ON
+cd $HOME/qt-rpi-cc/qt6/pi-build
+cmake ../src/qtbase-everywhere-src-6.8.0/ -GNinja -DCMAKE_BUILD_TYPE=Release -DQT_BUILD_EXAMPLES=OFF -DQT_BUILD_TESTS=OFF -DQT_HOST_PATH=$HOME/qt-rpi-cc/qt6/host -DCMAKE_STAGING_PREFIX=$HOME/qt-rpi-cc/qt6/pi -DCMAKE_INSTALL_PREFIX=/usr/local/qt6 -DCMAKE_TOOLCHAIN_FILE=$HOME/qt-rpi-cc/qt6/toolchain.cmake -DQT_QMAKE_TARGET_MKSPEC=devices/linux-rasp-pi4-aarch64 -DQT_FEATURE_eglfs=ON -DQT_FEATURE_linuxfb=ON -DQT_FEATURE_xcb=OFF -DQT_FEATURE_opengl=ON -DQT_FEATURE_eglfs_kms=ON -DQT_FEATURE_vulkan=OFF -DQT_FEATURE_eglfs_gbm=ON -DQT_FEATURE_drm=ON -DQT_FEATURE_gbm=ON
 cmake --build . --parallel 8
 cmake --install .
 ```
 Send the binaries to rpi. **You should modify the following commands to your needs.**
 ```
-rsync -avz --rsync-path="sudo rsync" $HOME/qt6/pi/* pi@raspberrypi.local:/usr/local/qt6
+rsync -avz --rsync-path="sudo rsync" $HOME/qt-rpi-cc/qt6/pi/* pi@rpi4:/usr/local/qt6
 ```
 ## With Qt Creator
 Set up **Compilers**.
@@ -473,7 +484,7 @@ Set up **Kits**.
 
 On **CMake Configuration** option, click Change and add follow commands. **You should modify the following commands to your needs.**
 ```
--DCMAKE_TOOLCHAIN_FILE:UNINITIALIZED=/home/pmy/qt6/pi/lib/cmake/Qt6/qt.toolchain.cmake
+-DCMAKE_TOOLCHAIN_FILE:UNINITIALIZED=/home/fcha/qt-rpi-cc/qt6/pi/lib/cmake/Qt6/qt.toolchain.cmake
 ```
 <img width="1250" height="787" alt="Kits_cmake_conf" src="https://github.com/user-attachments/assets/ae4c3807-56e2-4e0d-89a0-63ac8876933d" />
 
@@ -506,7 +517,7 @@ We have HelloWorld running on rpi now.
 ## Add QML module
 Download source code.
 ```
-cd ~/qt6/src
+cd ~/qt-rpi-cc/qt6/src
 ```
 ```
 wget https://download.qt.io/official_releases/qt/6.5/6.5.1/submodules/qtshadertools-everywhere-src-6.5.1.tar.xz
@@ -520,18 +531,18 @@ wget https://download.qt.io/official_releases/qt/6.5/6.5.1/submodules/qtdeclarat
 ```
 tar xf qtdeclarative-everywhere-src-6.5.1.tar.xz
 ```
-You can check dependencies at ~/qt6/src/qtdeclarative-everywhere-src-6.5.1/dependencies.yaml and ~/qt6/src/qtshadertools-everywhere-src-6.5.1/dependencies.yaml
+You can check dependencies at ~/qt-rpi-cc/qt6/src/qtdeclarative-everywhere-src-6.5.1/dependencies.yaml and ~/qt-rpi-cc/qt6/src/qtshadertools-everywhere-src-6.5.1/dependencies.yaml
 Make sure required modules should be built and installed first. 
 
 Build the modules for host
 ```
-cd ~/qt6/host-build
+cd ~/qt-rpi-cc/qt6/host-build
 ```
 ```
 rm -rf *
 ```
 ```
-$HOME/qt6/host/bin/qt-configure-module ../src/qtshadertools-everywhere-src-6.5.1
+$HOME/qt-rpi-cc/qt6/host/bin/qt-configure-module ../src/qtshadertools-everywhere-src-6.5.1
 ```
 ```
 cmake --build . --parallel 8
@@ -543,7 +554,7 @@ cmake --install .
 rm -rf *
 ```
 ```
-$HOME/qt6/host/bin/qt-configure-module ../src/qtdeclarative-everywhere-src-6.5.1
+$HOME/qt-rpi-cc/qt6/host/bin/qt-configure-module ../src/qtdeclarative-everywhere-src-6.5.1
 ```
 ```
 cmake --build . --parallel 8
@@ -553,13 +564,13 @@ cmake --install .
 ```
 Build the modules for rpi
 ```
-cd ~/qt6/pi-build
+cd ~/qt-rpi-cc/qt6/pi-build
 ```
 ```
 rm -rf *
 ```
 ```
-$HOME/qt6/pi/bin/qt-configure-module ../src/qtshadertools-everywhere-src-6.5.1
+$HOME/qt-rpi-cc/qt6/pi/bin/qt-configure-module ../src/qtshadertools-everywhere-src-6.5.1
 ```
 ```
 cmake --build . --parallel 8
@@ -571,7 +582,7 @@ cmake --install .
 rm -rf *
 ```
 ```
-$HOME/qt6/pi/bin/qt-configure-module ../src/qtdeclarative-everywhere-src-6.5.1
+$HOME/qt-rpi-cc/qt6/pi/bin/qt-configure-module ../src/qtdeclarative-everywhere-src-6.5.1
 ```
 ```
 cmake --build . --parallel 8
@@ -581,7 +592,7 @@ cmake --install .
 ```
 Send the binaries to rpi. **You should modify the following commands to your needs.**
 ```
-rsync -avz --rsync-path="sudo rsync" $HOME/qt6/pi/* pi@192.168.6.218:/usr/local/qt6
+rsync -avz --rsync-path="sudo rsync" $HOME/qt-rpi-cc/qt6/pi/* pi@rpi4:/usr/local/qt6
 ```
 ## Test HelloWorldQml
 ![image](https://github.com/MuyePan/CrossCompileQtForRpi/assets/136073506/f67fd349-3537-42f0-8e15-244f138a09d4)
