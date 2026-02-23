@@ -1,10 +1,12 @@
 # Cross compilation of Qt6.5.1 for RPI
-This page shows steps to compile Qt6.5.1 for RPI. Hope this page will help those stuck at following official tutorial. Before start, it is highly recommended that you use the same Ubuntu 22.04 At least not the older one. 
+This page shows steps to compile Qt6.5.1 for RPI. 
+Hope this page will help those stuck at following official tutorial. 
+This tutorial has been done with a RPI 4, RPI OS 2025-12-04 64bit and a VirtualBox VM with Ubunutu 24.04.4 LTS.
 
 This is based on muyepan init commit and https://www.interelectronix.com/qt-68-cross-compilation-raspberry-pi.html
 
 # Prepare RPI
-Install the lastest 64bit Raspberry Pi OS with desktop and update the system. 
+Create a SD card with Raspeberry Pi Imager. Use the Rapberry Pi OS Desktop from 2025-12-04
 
 Before making an upgrade we will put on hold the installation of libqt6* libraries. Tests have shown that these libraries conflict with the Qt Creator installation planned for later. 
 
@@ -59,7 +61,7 @@ Update the changes.
 source ~/.bashrc
 ```
 # Prepare host
-Create a virtual machine for Ubuntu 22.04.5 and then update the system.
+Create a virtual machine for Ubuntu 24.04.4 LTS and then update the system.
 ```
 sudo apt update
 ```
