@@ -48,11 +48,14 @@ Grant full access to the fold used for the deployment from Qt Creator.
 ```
 sudo chmod 777 /usr/local/bin
 ```
-Remember versions of gcc(12.2.0), ld(2.40) and ldd(2.36). Source code of the same version should be downloaded to build cross compiler later.
+Remember versions of gcc(14.2.0), ld(2.44) and ldd(2.41). Source code of the same version should be downloaded to build cross compiler later.
 
-<img width="743" height="380" alt="gcc_ld_ldd" src="https://github.com/user-attachments/assets/6bfa8731-fa5c-4dbc-8da8-07363838abef" />
+<img width="866" height="519" alt="gcc_ld_ldd_ver" src="https://github.com/user-attachments/assets/d19bae7a-99d7-4dac-a444-442eaaae173e" />
 
 Append following piece of code to the end of ~/.bashrc.
+```
+sudo nano ~/.bashrc
+```
 ```
 export QT_PLUGIN_PATH=/usr/local/qt6/plugins
 export QML2_IMPORT_PATH=/usr/local/qt6/qml
@@ -84,6 +87,10 @@ sudo apt-get install make build-essential libclang-dev ninja-build gcc git bison
 ```
 cd ~
 ```
+Create a working directory for the following steps
+```
+mkdir qt-rpi-cc && cd qt-rpi-cc
+```
 ```
 git clone https://github.com/Kitware/CMake.git
 ```
@@ -93,48 +100,52 @@ cd CMake
 ```
 ./bootstrap && make -j8&& sudo make install
 ```
-![image](https://github.com/MuyePan/CrossCompileQtForRpi/assets/136073506/e11f4e6c-a4c0-4f03-86dc-b6d463bab80b)
+<img width="866" height="277" alt="cmake_ver" src="https://github.com/user-attachments/assets/c7e74ee3-ff1e-4771-9cd2-bf5cab4735d1" />
 
-Folder CMake is not need any more. You can delete it.
-
+```
+cd ~/qt-rpi-cc
+```
+```
+rm -rf CMake
+```
 ## Build gcc as a cross compiler
 Download necessary source code. **You should modify the following commands to your needs.**
 For the time I make this page, they are:
-* gcc 12.2.0(gcc version 12.2.0 does not exist and use the closest one)
-* binutils 2.40 (ld version)
-* glibc 2.36 (ldd version)
+* gcc 14.2.0(gcc version)
+* binutils 2.44 (ld version)
+* glibc 2.41 (ldd version)
 ```
-cd ~
+cd ~/qt-rpi-cc/
 ```
 ```
 mkdir gcc_all && cd gcc_all
 ```
 ```
-wget https://ftpmirror.gnu.org/binutils/binutils-2.40.tar.bz2
+wget https://ftpmirror.gnu.org/binutils/binutils-2.44.tar.bz2
 ```
 ```
-wget https://ftpmirror.gnu.org/glibc/glibc-2.36.tar.bz2
+wget https://ftpmirror.gnu.org/glibc/glibc-2.41.tar.bz2
 ```
 ```
-wget https://ftpmirror.gnu.org/gcc/gcc-12.2.0/gcc-12.2.0.tar.gz
+wget https://ftpmirror.gnu.org/gcc/gcc-14.2.0/gcc-14.2.0.tar.gz
 ```
 ```
 git clone --depth=1 https://github.com/raspberrypi/linux
 ```
 ```
-tar xf binutils-2.40.tar.bz2
+tar xf binutils-2.44.tar.bz2
 ```
 ```
-tar xf glibc-2.36.tar.bz2
+tar xf glibc-2.41.tar.bz2
 ```
 ```
-tar xf gcc-12.2.0.tar.gz
+tar xf gcc-14.2.0.tar.gz
 ```
 ```
 rm *.tar.*
 ```
 ```
-cd gcc-12.2.0
+cd gcc-14.2.0
 ```
 ```
 contrib/download_prerequisites
@@ -151,7 +162,7 @@ export PATH=/opt/cross-pi-gcc/bin:$PATH
 ```
 Copy the kernel headers in the above folder.
 ```
-cd ~/gcc_all
+cd ~/qt-rpi-cc/gcc_all
 ```
 ```
 cd linux
@@ -164,13 +175,13 @@ make ARCH=arm64 INSTALL_HDR_PATH=/opt/cross-pi-gcc/aarch64-linux-gnu headers_ins
 ```
 Build Binutils. **You should modify the following commands to your needs.**
 ```
-cd ~/gcc_all
+cd ~/qt-rpi-cc/gcc_all
 ```
 ```
-mkdir build-binutils && cd build-
+mkdir build-binutils && cd build-binutils
 ```
 ```
-../binutils-2.40/configure --prefix=/opt/cross-pi-gcc --target=aarch64-linux-gnu --with-arch=armv8 --disable-multilib
+../binutils-2.44/configure --prefix=/opt/cross-pi-gcc --target=aarch64-linux-gnu --with-arch=armv8 --disable-multilib
 ```
 ```
 make -j 8
@@ -178,7 +189,7 @@ make -j 8
 ```
 make install
 ```
-Edit gcc-12.2.0/libsanitizer/asan/asan_linux.cpp. Add following piece of code.
+Edit gcc-14.2.0/libsanitizer/asan/asan_linux.cpp. Add following piece of code.
 ```
 #ifndef PATH_MAX
 #define PATH_MAX 4096
@@ -187,13 +198,13 @@ Edit gcc-12.2.0/libsanitizer/asan/asan_linux.cpp. Add following piece of code.
 
 Do a partial build of gcc. **You should modify the following commands to your needs.**
 ```
-cd ~/gcc_all
+cd ~/qt-rpi-cc/gcc_all
 ```
 ```
 mkdir build-gcc && cd build-gcc
 ```
 ```
-../gcc-12.2.0/configure --prefix=/opt/cross-pi-gcc --target=aarch64-linux-gnu --enable-languages=c,c++ --disable-multilib
+../gcc-14.2.0/configure --prefix=/opt/cross-pi-gcc --target=aarch64-linux-gnu --enable-languages=c,c++ --disable-multilib
 ```
 ```
 make -j8 all-gcc
@@ -203,13 +214,13 @@ make install-gcc
 ```
 Partially build Glibc. **You should modify the following commands to your needs.**
 ```
-cd ~/gcc_all
+cd ~/qt-rpi-cc/gcc_all
 ```
 ```
 mkdir build-glibc && cd build-glibc
 ```
 ```
-../glibc-2.36/configure \
+../glibc-2.41/configure \
   --prefix=/opt/cross-pi-gcc/aarch64-linux-gnu \
   --build=$MACHTYPE \
   --host=aarch64-linux-gnu \
@@ -269,9 +280,6 @@ At this point, we have a full cross compiler toolchain with gcc. Folder gcc_all 
 Make folders for sysroot and qt6.
 ```
 cd ~
-```
-```
-mkdir qt-rpi-cc && cd qt-rpi-cc
 ```
 ```
 mkdir rpi-sysroot rpi-sysroot/usr rpi-sysroot/opt
