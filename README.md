@@ -98,7 +98,7 @@ git clone https://github.com/Kitware/CMake.git
 cd CMake
 ```
 ```
-./bootstrap && make -j8&& sudo make install
+./bootstrap && make -j$(nproc)&& sudo make install
 ```
 <img width="866" height="277" alt="cmake_ver" src="https://github.com/user-attachments/assets/c7e74ee3-ff1e-4771-9cd2-bf5cab4735d1" />
 
@@ -184,7 +184,7 @@ mkdir build-binutils && cd build-binutils
 ../binutils-2.44/configure --prefix=/opt/cross-pi-gcc --target=aarch64-linux-gnu --with-arch=armv8 --disable-multilib
 ```
 ```
-make -j 8
+make -j$(nproc)
 ```
 ```
 make install
@@ -207,7 +207,7 @@ mkdir build-gcc && cd build-gcc
 ../gcc-14.2.0/configure --prefix=/opt/cross-pi-gcc --target=aarch64-linux-gnu --enable-languages=c,c++ --disable-multilib
 ```
 ```
-make -j8 all-gcc
+make -j$(nproc) all-gcc
 ```
 ```
 make install-gcc
@@ -233,7 +233,7 @@ mkdir build-glibc && cd build-glibc
 make install-bootstrap-headers=yes install-headers
 ```
 ```
-make -j8 csu/subdir_lib
+make -j$(nproc) csu/subdir_lib
 ```
 ```
 install csu/crt1.o csu/crti.o csu/crtn.o /opt/cross-pi-gcc/aarch64-linux-gnu/lib
@@ -249,7 +249,7 @@ Back to gcc.
 cd ~/gcc_all/build-gcc
 ```
 ```
-make -j8 all-target-libgcc
+make -j$(nproc) all-target-libgcc
 ```
 ```
 make install-target-libgcc
@@ -259,7 +259,7 @@ Finish building glibc.
 cd ~/gcc_all/build-glibc
 ```
 ```
-make -j8
+make -j$(nproc)
 ```
 ```
 make install
@@ -269,7 +269,7 @@ Finish building gcc.
 cd ~/gcc_all/build-gcc
 ```
 ```
-make -j8
+make -j$(nproc)
 ```
 ```
 make install
