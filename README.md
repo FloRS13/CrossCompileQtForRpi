@@ -292,10 +292,10 @@ cd ~/qt-rpi-cc
 ```
 rm -rf gcc_all
 ```
-## Building Qt6
+# Building Qt6
 Make folders for sysroot and qt6.
 ```
-cd ~
+cd ~/qt-rpi-cc
 ```
 ```
 mkdir rpi-sysroot rpi-sysroot/usr rpi-sysroot/opt
@@ -308,26 +308,26 @@ Download QtBase source code
 cd ~/qt-rpi-cc/qt6/src
 ```
 ```
-wget https://download.qt.io/official_releases/qt/6.5/6.5.1/submodules/qtbase-everywhere-src-6.5.1.tar.xz
+wget https://download.qt.io/official_releases/qt/6.10/6.10.2/submodules/qtbase-everywhere-src-6.10.2.tar.xz
 ```
 ```
-tar xf qtbase-everywhere-src-6.5.1.tar.xz
+tar xf qtbase-everywhere-src-6.10.2.tar.xz
 ```
-### Build Qt6 for host
+## Build Qt6 for host
 ```
 cd $HOME/qt-rpi-cc/qt6/host-build/
 ```
 ```
-cmake ../src/qtbase-everywhere-src-6.5.1/ -GNinja -DCMAKE_BUILD_TYPE=Release -DQT_BUILD_EXAMPLES=OFF -DQT_BUILD_TESTS=OFF -DCMAKE_INSTALL_PREFIX=$HOME/qt6/host
+cmake ../src/qtbase-everywhere-src-6.10.2/ -GNinja -DCMAKE_BUILD_TYPE=Release -DQT_BUILD_EXAMPLES=OFF -DQT_BUILD_TESTS=OFF -DCMAKE_INSTALL_PREFIX=$HOME/qt-rpi-cc/qt6/host
 ```
 ```
-cmake --build . --parallel 8
+cmake --build . --parallel$(nproc)
 ```
 ```
 cmake --install .
 ```
 Binaries will be in $HOME/qt-rpi-cc/qt6/host
-### Build Qt6 for rpi
+## Build Qt6 for rpi
 copy and paste a few folders from rpi using rsync through SSH. **You should modify the following commands to your needs.**
 For this example the name of the board is raspberrypi 
 ```
@@ -357,7 +357,7 @@ set(CMAKE_SYSTEM_NAME Linux)
 set(CMAKE_SYSTEM_PROCESSOR arm)
 
 # You should change location of sysroot to your needs.
-set(TARGET_SYSROOT /home/fcha/workspace/qt-rpi-cross-compilation/rpi-sysroot)
+set(TARGET_SYSROOT /home/$ENV{USER}/qt-rpi-cc/rpi-sysroot)
 set(TARGET_ARCHITECTURE aarch64-linux-gnu)
 set(CMAKE_SYSROOT ${TARGET_SYSROOT})
 
@@ -474,8 +474,14 @@ python3 sysroot-relativelinks.py rpi-sysroot
 Compile source code for rpi.
 ```
 cd $HOME/qt-rpi-cc/qt6/pi-build
-cmake ../src/qtbase-everywhere-src-6.8.0/ -GNinja -DCMAKE_BUILD_TYPE=Release -DQT_BUILD_EXAMPLES=OFF -DQT_BUILD_TESTS=OFF -DQT_HOST_PATH=$HOME/qt-rpi-cc/qt6/host -DCMAKE_STAGING_PREFIX=$HOME/qt-rpi-cc/qt6/pi -DCMAKE_INSTALL_PREFIX=/usr/local/qt6 -DCMAKE_TOOLCHAIN_FILE=$HOME/qt-rpi-cc/qt6/toolchain.cmake -DQT_QMAKE_TARGET_MKSPEC=devices/linux-rasp-pi4-aarch64 -DQT_FEATURE_eglfs=ON -DQT_FEATURE_linuxfb=ON -DQT_FEATURE_xcb=OFF -DQT_FEATURE_opengl=ON -DQT_FEATURE_eglfs_kms=ON -DQT_FEATURE_vulkan=OFF -DQT_FEATURE_eglfs_gbm=ON -DQT_FEATURE_drm=ON -DQT_FEATURE_gbm=ON
-cmake --build . --parallel 8
+```
+```
+cmake ../src/qtbase-everywhere-src-6.10.2/ -GNinja -DCMAKE_BUILD_TYPE=Release -DQT_BUILD_EXAMPLES=OFF -DQT_BUILD_TESTS=OFF -DQT_HOST_PATH=$HOME/qt-rpi-cc/qt6/host -DCMAKE_STAGING_PREFIX=$HOME/qt-rpi-cc/qt6/pi -DCMAKE_INSTALL_PREFIX=/usr/local/qt6 -DCMAKE_TOOLCHAIN_FILE=$HOME/qt-rpi-cc/qt6/toolchain.cmake -DQT_QMAKE_TARGET_MKSPEC=devices/linux-rasp-pi4-aarch64 -DQT_FEATURE_eglfs=ON -DQT_FEATURE_linuxfb=ON -DQT_FEATURE_xcb=OFF -DQT_FEATURE_opengl=ON -DQT_FEATURE_eglfs_kms=ON -DQT_FEATURE_vulkan=OFF -DQT_FEATURE_eglfs_gbm=ON -DQT_FEATURE_drm=ON -DQT_FEATURE_gbm=ON
+```
+```
+cmake --build . --parallel$(nproc)
+```
+```
 cmake --install .
 ```
 Send the binaries to rpi. **You should modify the following commands to your needs.**
