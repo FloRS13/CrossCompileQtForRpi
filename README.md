@@ -83,6 +83,18 @@ Install necessary packages.
 ```
 sudo apt-get install make build-essential libclang-dev ninja-build gcc git bison python3 gperf pkg-config libfontconfig1-dev libfreetype6-dev libx11-dev libx11-xcb-dev libxext-dev libxfixes-dev libxi-dev libxrender-dev libxcb1-dev libxcb-glx0-dev libxcb-keysyms1-dev libxcb-image0-dev libxcb-shm0-dev libxcb-icccm4-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-shape0-dev libxcb-randr0-dev libxcb-render-util0-dev libxcb-util-dev libxcb-xinerama0-dev libxcb-xkb-dev libxkbcommon-dev libxkbcommon-x11-dev libatspi2.0-dev libgl1-mesa-dev libglu1-mesa-dev freeglut3-dev build-essential gawk git texinfo bison file wget libssl-dev gdbserver gdb-multiarch libxcb-cursor-dev
 ```
+Append following piece of code to the end of ~/.bashrc.
+```
+sudo nano ~/.bashrc
+```
+```
+export PATH=/opt/cross-pi-gcc/bin:$PATH
+```
+Update the changes.
+```
+source ~/.bashrc
+```
+
 ## Build the lastest CMake from source
 ```
 cd ~
@@ -204,7 +216,7 @@ cd ~/qt-rpi-cc/gcc_all
 mkdir build-gcc && cd build-gcc
 ```
 ```
-../gcc-14.2.0/configure --prefix=/opt/cross-pi-gcc --target=aarch64-linux-gnu --enable-languages=c,c++ --disable-multilib
+../gcc-14.2.0/configure --prefix=/opt/cross-pi-gcc --target=aarch64-linux-gnu --enable-languages=c,c++ --disable-multilib --disable-libsanitizer
 ```
 ```
 make -j$(nproc) all-gcc
@@ -227,6 +239,8 @@ mkdir build-glibc && cd build-glibc
   --target=aarch64-linux-gnu \
   --with-headers=/opt/cross-pi-gcc/aarch64-linux-gnu/include \
   --disable-multilib \
+  --disable-werror \
+  --disable-mathvec \
   libc_cv_forced_unwind=yes
 ```
 ```
@@ -246,7 +260,7 @@ touch /opt/cross-pi-gcc/aarch64-linux-gnu/include/gnu/stubs.h
 ```
 Back to gcc.
 ```
-cd ~/gcc_all/build-gcc
+cd ~/qt-rpi-cc/gcc_all/build-gcc
 ```
 ```
 make -j$(nproc) all-target-libgcc
@@ -256,7 +270,7 @@ make install-target-libgcc
 ```
 Finish building glibc.
 ```
-cd ~/gcc_all/build-glibc
+cd ~/qt-rpi-cc/gcc_all/build-glibc
 ```
 ```
 make -j$(nproc)
@@ -266,7 +280,7 @@ make install
 ```
 Finish building gcc.
 ```
-cd ~/gcc_all/build-gcc
+cd ~/qt-rpi-cc/gcc_all/build-gcc
 ```
 ```
 make -j$(nproc)
