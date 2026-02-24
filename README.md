@@ -169,9 +169,6 @@ sudo mkdir -p /opt/cross-pi-gcc
 ```
 sudo chown $USER /opt/cross-pi-gcc
 ```
-```
-export PATH=/opt/cross-pi-gcc/bin:$PATH
-```
 Copy the kernel headers in the above folder.
 ```
 cd ~/qt-rpi-cc/gcc_all
@@ -289,7 +286,12 @@ make -j$(nproc)
 make install
 ```
 At this point, we have a full cross compiler toolchain with gcc. Folder gcc_all is not need any more. You can delete it.
-
+```
+cd ~/qt-rpi-cc
+```
+```
+rm -rf gcc_all
+```
 ## Building Qt6
 Make folders for sysroot and qt6.
 ```
