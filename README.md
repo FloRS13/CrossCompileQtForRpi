@@ -1,7 +1,7 @@
-<img width="1854" height="1048" alt="image" src="https://github.com/user-attachments/assets/ea0c29a1-c288-4990-925f-5a488daca8a8" /># Cross compilation of Qt6.5.1 for RPI
-This page shows steps to compile Qt6.5.1 for RPI. 
+# Cross compilation of Qt6.10.2 for RPI
+This page shows steps to compile Qt6.10.2 for RPI. 
 Hope this page will help those stuck at following official tutorial. 
-This tutorial has been done with a RPI 4, RPI OS 2025-12-04 64bit and a VirtualBox VM with Ubunutu 24.04.4 LTS.
+This tutorial has been done with a RPI 4, RPI OS 2025-12-04 64bit and a VirtualBox VM with Ubunutu 24.04.4 LTS. This also use Qt Creator 18.0.2
 
 This is based on muyepan init commit and https://www.interelectronix.com/qt-68-cross-compilation-raspberry-pi.html
 
