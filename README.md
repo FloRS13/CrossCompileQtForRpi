@@ -329,23 +329,21 @@ cmake --install .
 Binaries will be in $HOME/qt-rpi-cc/qt6/host
 ## Build Qt6 for rpi
 copy and paste a few folders from rpi using rsync through SSH. **You should modify the following commands to your needs.**
-For this example the name of the board is raspberrypi 
+For this example the ip of the board is 192.168.1.149 
 ```
 cd ~
 ```
 ```
-rsync -avz --rsync-path="sudo rsync" pi@rpi4:/usr/include qt-rpi-cc/rpi-sysroot/usr
+rsync -avz --rsync-path="sudo rsync" pi@192.168.1.149:/usr/include qt-rpi-cc/rpi-sysroot/usr
 ```
 ```
-rsync -avz --rsync-path="sudo rsync" pi@rpi4:/lib qt-rpi-cc/rpi-sysroot
+rsync -avz --rsync-path="sudo rsync" pi@192.168.1.149:/lib qt-rpi-cc/rpi-sysroot
 ```
 ```
-rsync -avz --rsync-path="sudo rsync" pi@rpi4:/usr/lib qt-rpi-cc/rpi-sysroot/usr
+rsync -avz --rsync-path="sudo rsync" pi@192.168.1.149:/usr/lib qt-rpi-cc/rpi-sysroot/usr
 ```
-```
-rsync -avz --rsync-path="sudo rsync" pi@rpi4:/opt/vc qt-rpi-cc/rpi-sysroot/opt
-```
-Create a file named toolchain.cmake in $HOME/qt-rpi-cc/qt6.
+
+Create a file named ```toolchain.cmake``` in $HOME/qt-rpi-cc/qt6.
 ```
 cmake_minimum_required(VERSION 3.18)
 include_guard(GLOBAL)
@@ -486,7 +484,7 @@ cmake --install .
 ```
 Send the binaries to rpi. **You should modify the following commands to your needs.**
 ```
-rsync -avz --rsync-path="sudo rsync" $HOME/qt-rpi-cc/qt6/pi/* pi@rpi4:/usr/local/qt6
+rsync -avz --rsync-path="sudo rsync" $HOME/qt-rpi-cc/qt6/pi/* pi@192.168.1.149:/usr/local/qt6
 ```
 ## With Qt Creator
 Set up **Compilers**.
