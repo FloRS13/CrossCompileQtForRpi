@@ -1,4 +1,4 @@
-# Cross compilation of Qt6.5.1 for RPI
+<img width="1854" height="1048" alt="image" src="https://github.com/user-attachments/assets/ea0c29a1-c288-4990-925f-5a488daca8a8" /># Cross compilation of Qt6.5.1 for RPI
 This page shows steps to compile Qt6.5.1 for RPI. 
 Hope this page will help those stuck at following official tutorial. 
 This tutorial has been done with a RPI 4, RPI OS 2025-12-04 64bit and a VirtualBox VM with Ubunutu 24.04.4 LTS.
@@ -30,13 +30,11 @@ sudo apt-get install libboost-all-dev libudev-dev libinput-dev libts-dev libmtde
 ```
 sudo apt-get install libavcodec-dev libavformat-dev libswscale-dev libx11-dev freetds-dev libsqlite3-dev libpq-dev libiodbc2-dev firebird-dev libxext-dev libxcb1 libxcb1-dev libx11-xcb1 libx11-xcb-dev libxcb-keysyms1 libxcb-keysyms1-dev libxcb-image0 libxcb-image0-dev libxcb-shm0 libxcb-shm0-dev libxcb-icccm4 libxcb-icccm4-dev libxcb-sync1 libxcb-sync-dev libxcb-render-util0 libxcb-render-util0-dev libxcb-xfixes0-dev libxrender-dev libxcb-shape0-dev libxcb-randr0-dev libxcb-glx0-dev libxi-dev libdrm-dev libxcb-xinerama0 libxcb-xinerama0-dev libatspi2.0-dev libxcursor-dev libxcomposite-dev libxdamage-dev libxss-dev libxtst-dev libpci-dev libcap-dev libxrandr-dev libaudio-dev libxkbcommon-x11-dev gdbserver
 ```
-Standard UTF-8 for Qt creator compatibility
+Activate the Console text console mode for the Rpi
 ```
-sudo locale-gen en_GB.UTF-8
+sudo raspi-config
 ```
-```
-sudo update-locale LANG=en_GB.UTF-8 LC_ALL=en_GB.UTF-8
-```
+Go on **System Options** then on **Boot** and select **B1 Console Text console**
 ```
 sudo reboot
 ```
@@ -486,62 +484,106 @@ Send the binaries to rpi. **You should modify the following commands to your nee
 ```
 rsync -avz --rsync-path="sudo rsync" $HOME/qt-rpi-cc/qt6/pi/* pi@192.168.1.149:/usr/local/qt6
 ```
-## With Qt Creator
-Set up **Compilers**.
-<img width="1247" height="790" alt="Compilers" src="https://github.com/user-attachments/assets/08fd1206-b086-4338-ba0e-11e5720271d7" />
+# Start with Qt Creator
+## Install Qt Creator
+```
+cd ~/qt-rpi-cc
+```
+```
+mkdir qtcreator && cd qtcreator
+```
+```
+wget https://download.qt.io/official_releases/qtcreator/18.0/18.0.2/qt-creator-opensource-linux-x86_64-18.0.2.run
+```
+```
+chmod +x ./qt-creator-opensource-linux-x86_64-18.0.2.run
+```
+```
+./qt-creator-opensource-linux-x86_64-18.0.2.run
+```
+Install Qt in a directory in the qt-rpi-cc that we already create
+<img width="848" height="626" alt="Screenshot from 2026-02-25 19-12-21" src="https://github.com/user-attachments/assets/268d6020-47c0-4b76-88a9-283fef406a84" />
 
+After install it, open it :)
 
-Set up **Debuggers**.
-<img width="1247" height="790" alt="Debuggers" src="https://github.com/user-attachments/assets/eb328b47-1cd4-448f-a432-c2274bcc66e3" />
+## Configure Qt Creator
+Go to **Edit** and **Preferences**
 
-Set up **Devices**.
-<img width="1250" height="787" alt="Devices" src="https://github.com/user-attachments/assets/6468cafd-b22b-4ebf-b78f-9e1eabc02a52" />
+### Set up **Compilers**
+Click on **Add** and **Custom**
+<img width="1324" height="899" alt="Screenshot from 2026-02-25 19-26-11" src="https://github.com/user-attachments/assets/46b25924-0261-4b3f-a868-d81b4da34bac" />
 
-Click **Deploy Public Key...** to deploy the key. Create one if not existed.
+### Set up **Debuggers**
+<img width="1324" height="899" alt="Screenshot from 2026-02-25 19-17-46" src="https://github.com/user-attachments/assets/a87db2e2-7ccf-46a7-bb36-72589de197df" />
+
+### Set up **Devices**
+Click on **Add...**, **Remote Linux Device** and **Start Wizard**
+<img width="1324" height="899" alt="Screenshot from 2026-02-25 20-41-59" src="https://github.com/user-attachments/assets/6aa427ab-f14b-472d-af44-ffd1cb5f6e0b" />
+<img width="448" height="396" alt="Screenshot from 2026-02-25 20-04-44" src="https://github.com/user-attachments/assets/83699da7-4f40-48b4-9e31-f0cb22283466" />
+<img width="669" height="426" alt="Screenshot from 2026-02-25 20-35-11" src="https://github.com/user-attachments/assets/205416fc-b4d2-4dc4-8025-e5d267a1182f" />
+
+For the key deployment click on **Create New Key Pair**
+Click on **Generate and Save Key Pair**, and **Deploy Public Key**
+
+<img width="422" height="297" alt="Screenshot from 2026-02-25 20-36-19" src="https://github.com/user-attachments/assets/89de9012-9a28-4575-a02d-e5be3032d5c6" />
+<img width="891" height="426" alt="Screenshot from 2026-02-25 20-36-47" src="https://github.com/user-attachments/assets/84bb2653-4efc-4521-9f2c-07e382a06eed" />
+<img width="1324" height="899" alt="Screenshot from 2026-02-25 20-37-08" src="https://github.com/user-attachments/assets/85adf4af-d7d0-48e1-9d02-003dd232ad5f" />
 
 Test the device.
-<img width="1247" height="790" alt="Device_test" src="https://github.com/user-attachments/assets/3d77b6af-1dcf-4fef-bec5-39c6c2a2420f" />
+
+<img width="648" height="646" alt="Screenshot from 2026-02-25 20-45-26" src="https://github.com/user-attachments/assets/3cf21901-6adf-4cd2-9a3a-5f4d9ce6bdb3" />
 
 
-Set up **Qt Versions**.
-<img width="1250" height="787" alt="Qt_versions" src="https://github.com/user-attachments/assets/55fae848-eee2-4b4c-a762-0a082124e3b6" />
+### Set up **Qt Versions**.
+<img width="1324" height="899" alt="Screenshot from 2026-02-25 19-21-08" src="https://github.com/user-attachments/assets/5f1273a2-05ca-4c54-9b74-8e414dac738e" />
 
-Set up **Kits**.
-<img width="1250" height="787" alt="Kits_RPI" src="https://github.com/user-attachments/assets/d0f60579-8adc-47ec-86da-92af22361abf" />
-
+### Set up **Kits**.
+<img width="1324" height="899" alt="Screenshot from 2026-02-25 20-47-18" src="https://github.com/user-attachments/assets/029e5a47-2df9-405e-808a-e3db642f8ccf" />
 
 On **CMake Configuration** option, click Change and add follow commands. **You should modify the following commands to your needs.**
 ```
 -DCMAKE_TOOLCHAIN_FILE:UNINITIALIZED=/home/fcha/qt-rpi-cc/qt6/pi/lib/cmake/Qt6/qt.toolchain.cmake
 ```
-<img width="1250" height="787" alt="Kits_cmake_conf" src="https://github.com/user-attachments/assets/ae4c3807-56e2-4e0d-89a0-63ac8876933d" />
-
+<img width="850" height="412" alt="Screenshot from 2026-02-25 20-48-05" src="https://github.com/user-attachments/assets/9490e25d-34d7-48d4-9821-09b601a63a92" />
 
 ## Test HelloWorld
-On **Help** option select **About Plugins**.Then uncheck **ClangCodeModel**(**No need for Qt Creator 10 or later**)..
+Create a new project. Select **Qt Widgets Application**
+<img width="908" height="586" alt="Screenshot from 2026-02-25 19-24-08" src="https://github.com/user-attachments/assets/ff38eaab-b43c-457f-9588-2bd748830292" />
 
-![image](https://github.com/MuyePan/CrossCompileQtForRpi/assets/136073506/efb1db08-c5cc-4210-adfe-85507e36d329)
+Name it **HelloWorld** and put it in a directory in **qt-rpi-cc**
+<img width="828" height="566" alt="Screenshot from 2026-02-25 19-24-39" src="https://github.com/user-attachments/assets/f2e3b759-db78-445c-945a-8fbc96c64c1a" />
+<img width="828" height="566" alt="Screenshot from 2026-02-25 20-54-32" src="https://github.com/user-attachments/assets/4ef66ccb-ff43-43fc-81b2-aa862dc56414" />
+<img width="828" height="566" alt="Screenshot from 2026-02-25 20-55-24" src="https://github.com/user-attachments/assets/5da0b33f-aa51-433e-92bb-71aaedbf81a0" />
 
-Append following piece of code to the end of CMakeLists.txt(**No need for Qt Creator 10 or later**).
+In the **CMakeLists.txt**, add this in **target_link_libraries**
 ```
-install(TARGETS HelloWorld
-    RUNTIME DESTINATION ""
-    BUNDLE DESTINATION ""
-    LIBRARY DESTINATION ""
-)
+Qt6::DBus
 ```
+<img width="1686" height="815" alt="Screenshot from 2026-02-25 20-57-43" src="https://github.com/user-attachments/assets/b35974dc-e1d4-4d56-b537-b026ed55d4d3" />
+
+
 Goto **Projects**
-Under **Run** section, on **X11 Forwarding** check **Forward to local display** and input :0 to the text field. 
-<img width="1509" height="703" alt="Project_run_config" src="https://github.com/user-attachments/assets/584dab5d-d22f-4712-af5a-e4c688093210" />
+Check the settings in **Run Settings**
+<img width="1854" height="1048" alt="Screenshot from 2026-02-25 21-04-46" src="https://github.com/user-attachments/assets/9d24dcdf-ef72-4906-89af-04f6ef59a50a" />
 
-Under **Environment** section, click **Details** to expand the environment option. Click **Add**, then on **Variable** column type **LD_LIBRARY_PATH**. On the **Value** column, type **:/usr/local/qt6/lib/**.
-<img width="1442" height="724" alt="Environment_Variable" src="https://github.com/user-attachments/assets/86dfc3fb-54c5-42c7-986c-f0e4ed465911" />
+In **Environment** section, click **Details** to expand the environment option. Click **Add**, then on **Variable** paste those variable
+```
+QT_PLUGIN_PATH=/usr/local/qt6/plugins
+QML2_IMPORT_PATH=/usr/local/qt6/qml
+unset DISPLAY
+QT_QPA_PLATFORM=eglfs
+QT_QPA_EGLFS_INTEGRATION=eglfs_kms
+QT_QPA_EGLFS_ALWAYS_SET_MODE=1
+QT_QPA_EGLFS_FORCE888=1
+QT_QPA_EGLFS_DEBUG=1
+EGL_PLATFORM=drm
+```
 
 Run.
+<img width="1854" height="1048" alt="Screenshot from 2026-02-25 21-06-36" src="https://github.com/user-attachments/assets/fda65b9f-30c6-47a3-8c3b-ddd6ee60b787" />
 
-![image](https://github.com/MuyePan/CrossCompileQtForRpi/assets/136073506/ee26ad77-f370-433b-8734-89e70c21903c)
+We have HelloWorld running on rpi now. :D 
 
-We have HelloWorld running on rpi now.
 ## Add QML module
 Download source code.
 ```
