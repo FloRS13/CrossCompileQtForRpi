@@ -5,7 +5,7 @@ This tutorial has been done with a RPI 4, RPI OS 2025-12-04 64bit and a VirtualB
 
 This is based on muyepan init commit and https://www.interelectronix.com/qt-68-cross-compilation-raspberry-pi.html
 
-# Prepare RPI
+## Prepare RPI
 Create a SD card with Raspeberry Pi Imager. Use the Rapberry Pi OS Desktop from 2025-12-04
 
 Before making an upgrade we will put on hold the installation of libqt6* libraries. Tests have shown that these libraries conflict with the Qt Creator installation planned for later. 
@@ -69,7 +69,7 @@ Update the changes.
 ```
 source ~/.bashrc
 ```
-# Prepare host
+## Prepare host
 Create a virtual machine for Ubuntu 24.04.4 LTS and then update the system.
 ```
 sudo apt update
@@ -93,7 +93,7 @@ Update the changes.
 source ~/.bashrc
 ```
 
-## Build the lastest CMake from source
+### Build the lastest CMake from source
 ```
 cd ~
 ```
@@ -118,7 +118,7 @@ cd ~/qt-rpi-cc
 ```
 rm -rf CMake
 ```
-## Build gcc as a cross compiler
+### Build gcc as a cross compiler
 Download necessary source code. **You should modify the following commands to your needs.**
 For the time I make this page, they are:
 * gcc 14.2.0(gcc version)
@@ -290,7 +290,7 @@ cd ~/qt-rpi-cc
 ```
 rm -rf gcc_all
 ```
-# Building Qt6
+## Building Qt6
 Make folders for sysroot and qt6.
 ```
 cd ~/qt-rpi-cc
@@ -311,7 +311,7 @@ wget https://download.qt.io/official_releases/qt/6.10/6.10.2/submodules/qtbase-e
 ```
 tar xf qtbase-everywhere-src-6.10.2.tar.xz
 ```
-## Build Qt6 for host
+### Build Qt6 for host
 ```
 cd $HOME/qt-rpi-cc/qt6/host-build/
 ```
@@ -325,7 +325,7 @@ cmake --build . --parallel$(nproc)
 cmake --install .
 ```
 Binaries will be in $HOME/qt-rpi-cc/qt6/host
-## Build Qt6 for rpi
+### Build Qt6 for rpi
 copy and paste a few folders from rpi using rsync through SSH. **You should modify the following commands to your needs.**
 For this example the ip of the board is 192.168.1.149 
 ```
@@ -484,8 +484,8 @@ Send the binaries to rpi. **You should modify the following commands to your nee
 ```
 rsync -avz --rsync-path="sudo rsync" $HOME/qt-rpi-cc/qt6/pi/* pi@192.168.1.149:/usr/local/qt6
 ```
-# Start with Qt Creator
-## Install Qt Creator
+## Start with Qt Creator
+### Install Qt Creator
 ```
 cd ~/qt-rpi-cc
 ```
@@ -506,17 +506,17 @@ Install Qt in a directory in the qt-rpi-cc that we already create
 
 After install it, open it :)
 
-## Configure Qt Creator
+### Configure Qt Creator
 Go to **Edit** and **Preferences**
 
-### Set up **Compilers**
+#### Set up **Compilers**
 Click on **Add** and **Custom**
 <img width="1324" height="899" alt="Screenshot from 2026-02-25 19-26-11" src="https://github.com/user-attachments/assets/46b25924-0261-4b3f-a868-d81b4da34bac" />
 
-### Set up **Debuggers**
+#### Set up **Debuggers**
 <img width="1324" height="899" alt="Screenshot from 2026-02-25 19-17-46" src="https://github.com/user-attachments/assets/a87db2e2-7ccf-46a7-bb36-72589de197df" />
 
-### Set up **Devices**
+#### Set up **Devices**
 Click on **Add...**, **Remote Linux Device** and **Start Wizard**
 <img width="1324" height="899" alt="Screenshot from 2026-02-25 20-41-59" src="https://github.com/user-attachments/assets/6aa427ab-f14b-472d-af44-ffd1cb5f6e0b" />
 <img width="448" height="396" alt="Screenshot from 2026-02-25 20-04-44" src="https://github.com/user-attachments/assets/83699da7-4f40-48b4-9e31-f0cb22283466" />
@@ -534,10 +534,10 @@ Test the device.
 <img width="648" height="646" alt="Screenshot from 2026-02-25 20-45-26" src="https://github.com/user-attachments/assets/3cf21901-6adf-4cd2-9a3a-5f4d9ce6bdb3" />
 
 
-### Set up **Qt Versions**.
+#### Set up **Qt Versions**.
 <img width="1324" height="899" alt="Screenshot from 2026-02-25 19-21-08" src="https://github.com/user-attachments/assets/5f1273a2-05ca-4c54-9b74-8e414dac738e" />
 
-### Set up **Kits**.
+#### Set up **Kits**.
 <img width="1324" height="899" alt="Screenshot from 2026-02-25 20-47-18" src="https://github.com/user-attachments/assets/029e5a47-2df9-405e-808a-e3db642f8ccf" />
 
 On **CMake Configuration** option, click Change and add follow commands. **You should modify the following commands to your needs.**
@@ -546,7 +546,7 @@ On **CMake Configuration** option, click Change and add follow commands. **You s
 ```
 <img width="850" height="412" alt="Screenshot from 2026-02-25 20-48-05" src="https://github.com/user-attachments/assets/9490e25d-34d7-48d4-9821-09b601a63a92" />
 
-## Test HelloWorld
+### Test HelloWorld
 Create a new project. Select **Qt Widgets Application**
 <img width="908" height="586" alt="Screenshot from 2026-02-25 19-24-08" src="https://github.com/user-attachments/assets/ff38eaab-b43c-457f-9588-2bd748830292" />
 
