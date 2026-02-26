@@ -585,26 +585,47 @@ Run.
 We have HelloWorld running on rpi now. :D 
 
 ## Add QML module
-Download source code.
+### Download source code.
 ```
 cd ~/qt-rpi-cc/qt6/src
 ```
 ```
-wget https://download.qt.io/official_releases/qt/6.5/6.5.1/submodules/qtshadertools-everywhere-src-6.5.1.tar.xz
+wget https://download.qt.io/official_releases/qt/6.10/6.10.2/submodules/qtshadertools-everywhere-src-6.10.2.tar.xz
 ```
 ```
-tar xf qtshadertools-everywhere-src-6.5.1.tar.xz
+tar xf qtshadertools-everywhere-src-6.10.2.tar.xz
 ```
 ```
-wget https://download.qt.io/official_releases/qt/6.5/6.5.1/submodules/qtdeclarative-everywhere-src-6.5.1.tar.xz
+wget https://download.qt.io/official_releases/qt/6.10/6.10.2/submodules/qtdeclarative-everywhere-src-6.10.2.tar.xz
 ```
 ```
-tar xf qtdeclarative-everywhere-src-6.5.1.tar.xz
+tar xf qtdeclarative-everywhere-src-6.10.2.tar.xz
 ```
-You can check dependencies at ~/qt-rpi-cc/qt6/src/qtdeclarative-everywhere-src-6.5.1/dependencies.yaml and ~/qt-rpi-cc/qt6/src/qtshadertools-everywhere-src-6.5.1/dependencies.yaml
-Make sure required modules should be built and installed first. 
+```
+wget https://download.qt.io/official_releases/qt/6.10/6.10.2/submodules/qtsvg-everywhere-src-6.10.2.tar.xz
+```
+```
+tar xf qtsvg-everywhere-src-6.10.2.tar.xz
+```
+```
+wget https://download.qt.io/official_releases/qt/6.10/6.10.2/submodules/qtlanguageserver-everywhere-scmake --build . --parallel$(nproc)rc-6.10.2.tar.xz
 
-Build the modules for host
+```
+```
+tar xf qtlanguageserver-everywhere-src-6.10.2.tar.xz
+```
+```
+wget https://download.qt.io/official_releases/qt/6.10/6.10.2/submodules/qtimageformats-everywhere-src-6.10.2.tar.xz
+```
+```
+tar xf qtimageformats-everywhere-src-6.10.2.tar.xz
+```
+```
+ls $HOME/qt-rpi-cc/rpi-sysroot/usr/lib/aarch64-linux-gnu | grep Qt6
+```
+
+### Build the modules for host
+
 ```
 cd ~/qt-rpi-cc/qt6/host-build
 ```
@@ -612,10 +633,10 @@ cd ~/qt-rpi-cc/qt6/host-build
 rm -rf *
 ```
 ```
-$HOME/qt-rpi-cc/qt6/host/bin/qt-configure-module ../src/qtshadertools-everywhere-src-6.5.1
+$HOME/qt-rpi-cc/qt6/host/bin/qt-configure-module ../src/qtsvg-everywhere-src-6.10.2
 ```
 ```
-cmake --build . --parallel 8
+cmake --build . --parallel$(nproc)
 ```
 ```
 cmake --install .
@@ -624,15 +645,54 @@ cmake --install .
 rm -rf *
 ```
 ```
-$HOME/qt-rpi-cc/qt6/host/bin/qt-configure-module ../src/qtdeclarative-everywhere-src-6.5.1
+$HOME/qt-rpi-cc/qt6/host/bin/qt-configure-module ../src/qtimageformats-everywhere-src-6.10.2
 ```
 ```
-cmake --build . --parallel 8
+cmake --build . --parallel$(nproc)
 ```
 ```
 cmake --install .
 ```
-Build the modules for rpi
+```
+rm -rf *
+```
+```
+$HOME/qt-rpi-cc/qt6/host/bin/qt-configure-module ../src/qtlanguageserver-everywhere-src-6.10.2
+```
+```
+cmake --build . --parallel$(nproc)
+```
+```
+cmake --install .
+```
+```
+rm -rf *
+```
+```
+$HOME/qt-rpi-cc/qt6/host/bin/qt-configure-module ../src/qtshadertools-everywhere-src-6.10.2
+```
+```
+cmake --build . --parallel$(nproc)
+```
+```
+cmake --install .
+```
+```
+rm -rf *
+```
+```
+$HOME/qt-rpi-cc/qt6/host/bin/qt-configure-module ../src/qtdeclarative-everywhere-src-6.10.2
+```
+```
+cmake --build . --parallel$(nproc)
+```
+```
+cmake --install .
+```
+```
+rm -rf *
+```
+### Build the modules for rpi
 ```
 cd ~/qt-rpi-cc/qt6/pi-build
 ```
@@ -640,10 +700,10 @@ cd ~/qt-rpi-cc/qt6/pi-build
 rm -rf *
 ```
 ```
-$HOME/qt-rpi-cc/qt6/pi/bin/qt-configure-module ../src/qtshadertools-everywhere-src-6.5.1
+$HOME/qt-rpi-cc/qt6/pi/bin/qt-configure-module ../src/qtsvg-everywhere-src-6.10.2
 ```
 ```
-cmake --build . --parallel 8
+cmake --build . --parallel$(nproc)
 ```
 ```
 cmake --install .
@@ -652,10 +712,46 @@ cmake --install .
 rm -rf *
 ```
 ```
-$HOME/qt-rpi-cc/qt6/pi/bin/qt-configure-module ../src/qtdeclarative-everywhere-src-6.5.1
+$HOME/qt-rpi-cc/qt6/pi/bin/qt-configure-module ../src/qtimageformats-everywhere-src-6.10.2
 ```
 ```
-cmake --build . --parallel 8
+cmake --build . --parallel$(nproc)
+```
+```
+cmake --install .
+```
+```
+rm -rf *
+```
+```
+$HOME/qt-rpi-cc/qt6/pi/bin/qt-configure-module ../src/qtlanguageserver-everywhere-src-6.10.2
+```
+```
+cmake --build . --parallel$(nproc)
+```
+```
+cmake --install .
+```
+```
+rm -rf *
+```
+```
+$HOME/qt-rpi-cc/qt6/pi/bin/qt-configure-module ../src/qtshadertools-everywhere-src-6.10.2
+```
+```
+cmake --build . --parallel$(nproc)
+```
+```
+cmake --install .
+```
+```
+rm -rf *
+```
+```
+$HOME/qt-rpi-cc/qt6/pi/bin/qt-configure-module ../src/qtdeclarative-everywhere-src-6.10.2
+```
+```
+cmake --build . --parallel$(nproc)
 ```
 ```
 cmake --install .
